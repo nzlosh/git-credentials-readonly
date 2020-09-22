@@ -12,6 +12,22 @@ senses.
 <scheme>://<username>:<password>@<hostname>:<port>/<path>
 ```
 
+## Build
+
+A C++ compile that supports the C++17 standard is required.
+Cmake greater than version 3.10.
+
+The following commands will clone and build the project.  An executable should be created
+in the project's `build` directory.
+
+```
+git clone https://github.com/nzlosh/git-credentials-readonly
+mkdir git-credentials-readonly/build
+cd git-credentials-readonly/build
+cmake ..
+make
+```
+
 ## Usage
 ```
     git-credentials-readonly [-f|--file <filename>] <git option>
