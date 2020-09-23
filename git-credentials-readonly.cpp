@@ -70,6 +70,10 @@ Param* parse_arguments(int argc, char* argv[])
             std::cout << argv[0] << " v" << VERSION << std::endl;
             exit(0);
         }
+        if (arg == "-p" || arg == "--use_http_path")
+        {
+            param->use_http_path = true;
+        }
     }
     return param;
 }
@@ -99,28 +103,18 @@ void parse_git_credentials(Url& git_credentials)
     }
 }
 
-void fill_in_git_credentials(Url& git_credentials, git_conf const & user_credentials)
+void fill_in_git_credentials(Url& git_credentials, git_conf const & user_credentials, bool use_http_path)
 {
     for (auto & user_credential : user_credentials)
     {
         if (git_credentials == user_credential)
         {
             // Test for path equality if git passed it through.
-            if (
-                (git_credentials.path != "" && git_credentials.path == user_credential.path) ||
-                git_credentials.path == ""
-            )
+            if ((use_http_path == true && git_credentials.path == user_credential.path) || use_http_path == false)
             {
-                // Test for username equality if git passed it through.
-                if (
-                    (git_credentials.username != "" && git_credentials.username == user_credential.username) ||
-                    git_credentials.username == ""
-                )
-                {
-                    git_credentials.username = user_credential.username;
-                    git_credentials.password = user_credential.password;
-                    break;
-                }
+                git_credentials.username = user_credential.username;
+                git_credentials.password = user_credential.password;
+                break;
             }
         }
     }
@@ -137,7 +131,7 @@ int main(int argc, char* argv[])
     parse_user_credentials(param->filename, user_credentials);
     parse_git_credentials(git_credentials);
 
-    fill_in_git_credentials(git_credentials, user_credentials);
+    fill_in_git_credentials(git_credentials, user_credentials, param->use_http_path);
 
     std::cout
             << "protocol=" << git_credentials.protocol << std::endl

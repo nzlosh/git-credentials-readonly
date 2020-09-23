@@ -39,16 +39,18 @@ Configure git to use a credential helper
 `git config --global credential.helper /usr/local/bin/git-credentials-readonly`
 
 Enable credentials for a git source
-`git config --global credential.https://github.com`
+`git config --global credential.https://github.com/`
 
+Optionally enable url path to support different credentials on the same host (like github.com or gitlab.com)
+`git config --global credential.https://github.com/.useHttpPath true`
 
 ## Usage
 ```
-    git-credentials-readonly [-f|--file <filename>] <git option>
+    git-credentials-readonly [-f|--file <filename>] [-p|--use_http_path] <git option>
 
 Flags:
     f or file: A path to the file that is to be read for URLs.  Default location is $HOME/.git-credentials-ro
-
+    p or use_http_path: Compare git supplied path with credential url path as a match criterion.
 Arguments:
     git option: Git supplied option 'get', 'store' or 'erase'.  Store and erase are silently ignored by this helper.
 ```

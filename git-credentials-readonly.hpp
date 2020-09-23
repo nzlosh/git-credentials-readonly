@@ -28,6 +28,7 @@ class Param
 public:
     std::string option;
     std::string filename;
+    bool use_http_path;
 };
 
 typedef std::vector<Url> git_conf;
