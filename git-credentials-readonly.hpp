@@ -20,13 +20,7 @@ public:
     std::string password;
     std::string host;
     std::string path;
-    bool operator==(const Url& q) const
-    {
-        return
-            q.protocol == protocol &&
-            q.host == host &&
-            ((q.path != "" && q.path == path) || q.path == "");
-    }
+    bool operator==(const Url& url) const;
 };
 
 class Param

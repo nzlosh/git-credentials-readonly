@@ -1,5 +1,11 @@
 #include "git-credentials-readonly.hpp"
 
+bool Url::operator==(const Url& url) const
+{
+    // equality can only be evaluated on protocol and host since they're required on lhs and rhs.
+    return url.protocol == protocol && url.host == host;
+}
+
 void parse_user_credentials(std::string const & filename, git_conf& user_credentials)
 {
     /*
@@ -99,9 +105,23 @@ void fill_in_git_credentials(Url& git_credentials, git_conf const & user_credent
     {
         if (git_credentials == user_credential)
         {
-            git_credentials.username = user_credential.username;
-            git_credentials.password = user_credential.password;
-            break;
+            // Test for path equality if git passed it through.
+            if (
+                (git_credentials.path != "" && git_credentials.path == user_credential.path) ||
+                git_credentials.path == ""
+            )
+            {
+                // Test for username equality if git passed it through.
+                if (
+                    (git_credentials.username != "" && git_credentials.username == user_credential.username) ||
+                    git_credentials.username == ""
+                )
+                {
+                    git_credentials.username = user_credential.username;
+                    git_credentials.password = user_credential.password;
+                    break;
+                }
+            }
         }
     }
 }
